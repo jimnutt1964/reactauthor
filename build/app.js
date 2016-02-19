@@ -2,7 +2,7 @@
 (function () {
 	'use strict';
 	
-	var Quiz = React.createClass({
+	var Quiz = React.createClass({displayName: "Quiz",
 		propTypes:{
 			data: React.PropTypes.array.isRequired
 		},
@@ -13,28 +13,28 @@
 			};
 		},
 		render: function (){
-			return (<div>
-				<div className="row">
-					<div className="col-md-4">
-						<img src={this.state.author.imageUrl} className="author" />
-					</div>
-					<div className="col-md-7">
-						{this.state.books.map(function (b){
-							return <Book title={b} />;
-						}, this)}
-					</div>
-					<div className="col-md-1"></div>
-				</div>
-			</div>);
+			return (React.createElement("div", null, 
+				React.createElement("div", {className: "row"}, 
+					React.createElement("div", {className: "col-md-4"}, 
+						React.createElement("img", {src: this.state.author.imageUrl, className: "author"})
+					), 
+					React.createElement("div", {className: "col-md-7"}, 
+						this.state.books.map(function (b){
+							return React.createElement(Book, {title: b});
+						}, this)
+					), 
+					React.createElement("div", {className: "col-md-1"})
+				)
+			));
 		}
 	});
 	
-	var Book = React.createClass({
+	var Book = React.createClass({displayName: "Book",
 		propTypes:{
 			title: React.PropTypes.string.isRequired
 		},
 		render: function() {
-			return <div className="answer"><h4>{this.props.title}</h4></div>;
+			return React.createElement("div", {className: "answer"}, React.createElement("h4", null, this.props.title));
 		}
 	})
 
@@ -76,6 +76,6 @@
 		}
 	];
 	
-	React.renderComponent(<Quiz data={data} />,
+	React.renderComponent(React.createElement(Quiz, {data: data}),
 		document.getElementById('app'));
 })();
