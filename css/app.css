@@ -2,6 +2,7 @@
 	border-left: 4px solid LightBlue;
 	background-color: rgb(230, 248, 254);
 	padding: 16px 15px;
+	margin-bottom: 10px;
 }
 .answer:hover{
 	background-color: LightBlue;

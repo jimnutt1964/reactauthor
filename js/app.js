@@ -7,16 +7,13 @@
 			data: React.PropTypes.array.isRequired
 		},
 		getInitialState: function () {
-			return {
-				author: this.props.data[0],
-				books: this.props.data[0].books
-			};
+			return this.props.data.selectGame();
 		},
 		render: function (){
 			return (<div>
 				<div className="row">
 					<div className="col-md-4">
-						<img src={this.state.author.imageUrl} className="author" />
+						<img src={this.state.author.imageUrl} className="authorimage" />
 					</div>
 					<div className="col-md-7">
 						{this.state.books.map(function (b){
@@ -75,6 +72,22 @@
 			books: ['Hamlet','Macbeth','Romeo and Juliet']
 		}
 	];
+	data.selectGame = function () {
+		var books = _.shuffle(this.reduce(function (p,c,i) {
+				return p.concat(c.books);
+			}, [])).slice(0,4);
+
+		var answer = books[_.random(books.length-1)];
+
+		return {
+			books: books,
+			author: _.find(this, function(author) {
+				return author.books.some(function (title) {
+					return title === answer;
+				});
+			})
+		};
+	};
 	
 	React.renderComponent(<Quiz data={data} />,
 		document.getElementById('app'));
