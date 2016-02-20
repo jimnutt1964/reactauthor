@@ -7,7 +7,20 @@
 			data: React.PropTypes.array.isRequired
 		},
 		getInitialState: function () {
-			return this.props.data.selectGame();
+			return _.extend({
+				bgClass: 'neutral',
+				showContinue: false
+			}, this.props.data.selectGame());
+		},
+		handleBookSelected: function(title){
+			var isCorrect = this.state.checkAnswer(title);
+			this.setState({
+				bgClass: isCorrect ? 'pass' : 'fail',
+				showContinue: isCorrect
+			});
+		},
+		handleContinue: function (){
+			this.setState(this.getInitialState());
 		},
 		render: function (){
 			return (React.createElement("div", null, 
@@ -17,12 +30,20 @@
 					), 
 					React.createElement("div", {className: "col-md-7"}, 
 						this.state.books.map(function (b){
-							return React.createElement(Book, {title: b});
+							return React.createElement(Book, {onBookSelected: this.handleBookSelected, title: b});
 						}, this)
 					), 
-					React.createElement("div", {className: "col-md-1"})
-				)
-			));
+					React.createElement("div", {className: "col-md-1 " + this.state.bgClass})
+				), 
+				this.state.showContinue ? (
+					React.createElement("div", {className: "row"}, 
+						React.createElement("div", {className: "col-md-12"}, 
+							React.createElement("input", {onClick: this.handleContinue, type: "button", className: "btn btn-primary pull-right", value: "Continue"})
+						)
+					)) : React.createElement("span", null)
+				
+			)
+			);
 		}
 	});
 	
@@ -30,10 +51,15 @@
 		propTypes:{
 			title: React.PropTypes.string.isRequired
 		},
+		handleClick: function(){
+			this.props.onBookSelected(this.props.title);
+		},
 		render: function() {
-			return React.createElement("div", {className: "answer"}, React.createElement("h4", null, this.props.title));
+			return 	React.createElement("div", {onClick: this.handleClick, className: "answer"}, 
+						React.createElement("h4", null, this.props.title)
+					);
 		}
-	})
+	});
 
 	var data = [
 		{
@@ -85,10 +111,15 @@
 				return author.books.some(function (title) {
 					return title === answer;
 				});
-			})
+			}),
+			checkAnswer : function(title){
+				return this.author.books.some(function(t){
+					return t === title;
+				});
+			}
 		};
 	};
-	
+
 	React.renderComponent(React.createElement(Quiz, {data: data}),
 		document.getElementById('app'));
 })();
