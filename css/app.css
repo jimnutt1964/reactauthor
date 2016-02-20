@@ -16,9 +16,9 @@
 }
 .pass {
 	background-color: Green;
-	height: 250px;
+	height: 315px
 }
 .fail {
 	background-color: Red;
-	height: 250px;
+	height: 315px;
 }
